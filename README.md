@@ -123,4 +123,71 @@ function addPrivateProperty(o, name, predicate) {
     else
       value = v;
   }
-  ```
+}
+```
+ECMAScript 3 에서 map 과 reduce연산 사용하기.
+```
+ex) array.map(x+1);
+
+var map = Array.prototype.map ? 
+  function(a, f) { return a.map(f); } : 
+  function(a, f) {
+    var result = [];
+    for(var i = 0, len = a.length; i < len; i++) {
+      if(i in a) result[i] = f.call(null, a[i], a, i);
+    }
+    return result;
+  }
+  
+ex)array.reduce(reducer,5); 5는 초기값. reducer 조건.function(x,y) { return x + y };
+  
+
+var reduce = Array.prototype.reduce ?
+  function(a, f, initial) {
+    if (arguments.length > 2)
+      return a.reduce(f,initial);
+    else return a.reduce(f);
+  }
+  : function(a, f, initial) {
+    var i = 0, len = a.length, accumulator;
+        
+    if (arguments.length > 2) accumulator = initial;
+    else {
+      if (len == 0) throw TypeError();
+      while(i < len) {
+        if(i in a) {
+          accumulator = a[i++];
+          break;
+        }
+        else i++;
+      if (i == len) throw TypeError();
+    }
+        
+    while(i < len) {
+      if(i in a)
+        accumulator = f.call(undefined, accumulator, a[i], i, a);
+      i++;
+    }
+    return accumulator;
+  };
+```
+
+```
+functio not(f) {
+  return  function() {
+    var result = f.apply(this, argument);
+    return !result;
+  };
+}
+
+*묶이는 것에 조심.
+function mapper(f) {
+  return function(a) {
+    return map(a, f);
+  };
+}
+
+var increment = function(x) { return x + 1 };
+var incrementer = mapper(increment);
+incrementer([1,2,3]); -> 2,3,4
+```
