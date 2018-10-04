@@ -191,3 +191,106 @@ var increment = function(x) { return x + 1 };
 var incrementer = mapper(increment);
 incrementer([1,2,3]); -> 2,3,4
 ```
+
+18.10.04
+노트북을 새로 바꿔서 여러가지 써봤다.
+다른건 아니고 어중간하게 gitdesktop써본다 깔았다가 프록시 건들고 이것저것 건드렸다가 관련 자료가 안나와서 한참 해맸다.
+그냥 git 상에서 오류가 좀 났었던거같다. 
+이것저것 해매다가 그냥처음부터 다시 해보자 해서 프록시 관련 한것들을
+git config --global --unset
+으로 모두 지우고 테스트 해보니 정상적 실행.
+
+```
+function array(a, n) { return Array.prototype.slice.call(a, n || 0 ) }
+
+function partialLeft(f) {
+  var args = arguments;
+  return function() {
+    var a = array(args, 1);
+    a = a.concat(array(arguments));
+    return f.apply(this, a);
+  };
+}
+
+function partialRight(f) {
+  var args = arguments;
+  return function() {
+    var a = array(arguments);
+    a = a.concat(array(args,1));
+    return f.apply(this, a);
+  };
+}
+
+function partial(f) {
+  var args arguments;
+  return function() {
+    var a = array(args, 1);
+    var i = 0, j = 0;
+    for( ; i < a.length; i++ ) {
+      if(a[i] === undefined) a[i] = arguments[j++];
+    }
+    a = a.concat(array(arguments, j))
+    return f.apply(this, a);
+  };
+}
+```
+
+```
+function memoize(f) {
+  var cache = {};
+  return function() {
+    var key = arguments.length + Array.prototype.join.call(arguments, ",");
+    if(key in cache) return cache[key];
+    else return cache[key] = f.apply(this, arguments);
+  }
+}
+```
+
+```
+function Range(from, to) {
+  this.from = from
+  this.to = to
+}
+
+Range.prototype = {
+  includes: function(x) { return this.from <= x && x <= this.to; }, 
+  foreach: function(f) {
+    for(var x = Math.ceil(this.from); x <= this.to; x++) f(x);
+  },
+  toString: function() { return "(" + this.from + "..." + this.to + ")"; }
+};
+```
+prototype, constructor 개념 잘 알기.
+```
+var n = 3;
+n.times(function(n) { console.log(n + " hello"); });
+Number.prototype.tiems = function(f, context) {
+  var n = Number(this);
+  for(var i = 0; i < n; i++) f.call(context, i);
+};
+```
+
+```
+function quacks(o) {
+  for(var i = 1; i < arguments.length; i++) {
+    var arg = argument[i];
+    switch(typeof arg) {
+    case "string":
+      if (typeof o[arg] !== "function") return false;
+      continue;
+    case "function:
+      arg = arg.prototype;
+    case "object":
+      for(var m in arg) {
+        if (typeof arg[m] !== "function") continue;
+        if (typeof o[m] !== "function") return false;
+      }
+    }
+  }
+  return true;
+}
+```
+
+```
+
+      
