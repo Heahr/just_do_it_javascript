@@ -292,7 +292,4 @@ function quacks(o) {
   return true;
 }
 ```
-
-```
-
-      
+   
