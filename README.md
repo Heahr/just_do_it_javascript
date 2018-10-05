@@ -42,7 +42,7 @@ function key(o) {
   var result = [];
   for (var prop in p) {
     if(o.hasOwnPrototype[prop])
-    result.push(prop);
+      result.push(prop);
   }
   return result;
 }
