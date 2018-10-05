@@ -1,6 +1,8 @@
 # just_do_it_javascript
 무작정 써보기
 
+복습과 겸해서 하고있어서 느릴수 있음.
+
 ```
 function inherit(p) {
   if (p == null) throw TypeError();
