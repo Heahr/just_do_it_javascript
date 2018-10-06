@@ -292,7 +292,10 @@ function quacks(o) {
   return true;
 }
 ```
-   
+
+18.10.06
+쉬면 불안한 병걸린듯. 주말에 한번이라도 복습하거나 한자라도 안적으면 불안해서 다른거를 못함.
+
 ```
 function Set() {
   this.values = {};
