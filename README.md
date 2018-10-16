@@ -377,7 +377,7 @@ function enumeration(namesToValues) {
     toJSON: function() { return this.name; }
   };
   
-  enumeration.value = [];
+  enumeration.values = [];
   
   for(name in namesToValues) {
     var e = inherit(proto);
@@ -451,4 +451,93 @@ var deck = (new Deck()).shuffle();
 var hand = deck.deal(13).sort(Card.orderBySuit);
 ```
 
+```
+function Range (from, to) {
+  this.from = function() { return from; };
+  this.to = function() { return to; };
+}
+
+Range.prototype = {
+  constructor: Range,
+  includes: function(x) { return this.from() <= x && x <= this.to(); },
+  ...
+}
+```
+
+```
+function Set() {
+  this.values = {};
+  this.n = 0;
+  
+  if (arguments.length == 1 && isArrayLike(arguments[0]))
+    this.add.apply(this, arguments[0]);
+  else if (arguments.length > 0)
+    this.add.apply(this, arugments);
+}
+```
+
+```
+subclass
+
+function SingletonSet(member) {
+  this.member = member;
+}
+
+SingletonSet.prototype = inherit(Set.prototype);
+
+extend(Singleton.prototype, {
+  constructor: SingletonSet,
+  add: function() { throw "read-only set"; },
+  foreach: function(f, context) { f.call(context, this.member); },
+  ...
+});
+```
+
+```
+function NonNullSet() {
+  Set.apply(this, arguments);
+}
+
+NonNullSet.prototype = inherit(Set.prototype);
+NonNullSet.prototype.constructor = NonNullSet;
+
+NonNullSet.prototype.add = function() {
+  for(var i = 0; i < arguments.length; i++) {
+    if(argument[i] == null)
+      throw new Erro("null 또는 undefined 추가불가");
+  }
+  //메서드 체이닝 수행.
+  return Set.prototype.add.apply(this, arguments);
+}
+```
+
+```
+var FilteredSet = Set.extend(
+  function FilteredSet(set, filter) {
+    this.set = set;
+    this.filter = filter;
+  },
+  {
+    add: function() {
+      if(this.filter) {
+        for(var i = 0; i < arguments.length; i++) {
+          var v = argument[i];
+          if(!this.filter(v))
+            throw new Error("FilteredSet: value " + v + "filter에 의해 거부됨");
+        }
+      }
+      this.set.add.apply(this.set, arguments);
+      return this;
+    },
+    remove: function() {
+      this.set.remove.apply(this.set, arguments);
+      return this;
+    },
+    contains: function(v) { return this.set.contains(v); },
+    ...
+  });
+  
+ex)
+var s = new FilteredSet(new Set(), function(x) { return x !== null; });
+var t = new FilteredSet(s, function(x) { return !(x instanceof Set); });
 ```
