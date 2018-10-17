@@ -465,6 +465,61 @@ Range.prototype = {
 ```
 
 ```
+function Range(from, to) {
+  var props = {
+    from: { value: from, enumerable: true, writable: false, configurable: false },
+    to: { value: to, enumerable: true, writable: false, configurable: false }
+  };
+  
+  if(this instansof Range)                        //생성자 호출시 this객체의 프로퍼티를 정의함.
+    Object.defineProperties(this, props);
+  else                                            //아니면 팩터리 함수로 정의하고 새로운 Range객체생성후, props를 설정후 반환
+    return Object.create(Range.prototype, props);
+}
+Object.defineProperties(Range.prototype, {
+  includes: {
+    value: function(x) { return this.from <= x && x <= this.to; }
+  },
+  foreach: {
+    value: function(x) {
+      for(var x = Math.ceil(this.from); x <= this.to; x++) f(x);
+    }
+  },
+  toString: {
+    value: function() { return "(" + this.from + "..." + this.to + ")"; }
+});
+```
+
+```
+캡슐화
+function Range(from, to) {
+  if(from > to)  throw new Error("try from <= to");
+  
+  function getFrom() { return from; }
+  function getTo() { return to; }
+  function setFrom(f) {
+    if(f <= to) from = f;
+    else throw new Error("try from <= to");
+  }
+  function setTo(t) {
+    if(t >= from) to = t;
+    else throw new Error("try to >= from");
+  }
+  
+  Object.defineProperties(this, {
+    from: { get: getFrom, set: setFrom, enumerable: true, configurable: false},
+    to: { get: getTo, set: setTo, enumerable: true, configurable: false}
+  });
+}
+
+Range.prototype = hideProps({
+  constructor: Range,
+  incldues: function(x) { return this.from <= && x <= this.to; },
+  ....
+});
+```
+
+```
 function Set() {
   this.values = {};
   this.n = 0;
@@ -490,6 +545,46 @@ extend(Singleton.prototype, {
   add: function() { throw "read-only set"; },
   foreach: function(f, context) { f.call(context, this.member); },
   ...
+});
+```
+
+```
+es5 subclass
+function StringSet() {
+  this.set = Object.create(null);       //프로토타입없는 객체 생성.
+  this.n = 0;
+  this.add.apply(this, arguments);
+}
+
+//AbstractWritableSet의 서브클래스 StringSet, 
+//object.create를 사용하여 한번의 호출로 슈퍼클래스의 프로토타입을 상속하고, 읽기전용이라 서브클래스를 정의하기가 까다로워 질수 있다.
+StringSet.prototype = Object.create(AbstractWritableSet.prototype, {
+  constructor: { value: StringSet },
+  contains: { value: function(x) { return x in this.set; } },
+  size: { value: function(x) { return this.n; } },      //?
+  foreach: { value: function(f, c) { Object.keys(this.set).foreach(f, c); } },
+  add: {
+    value: function() {
+      for(var i = 0; i < arguments.length; i++) {
+        if(!(arguments[i] in this.set)) {
+          this.set[arguments[i]] = ture;
+          this.n++;
+        }
+      }
+      return this;
+    }
+  },
+  remove: {
+    value: function() {
+      for(var i = 0; i < arguments.length; i++) {
+        if(arguments[i] in this.set) {
+          delete this.set[arguments[i]];
+          this.n--;
+        }
+      }
+      return this;
+    }
+  }
 });
 ```
 
@@ -540,4 +635,67 @@ var FilteredSet = Set.extend(
 ex)
 var s = new FilteredSet(new Set(), function(x) { return x !== null; });
 var t = new FilteredSet(s, function(x) { return !(x instanceof Set); });
+```
+
+```
+private 네임스페이스와 함수 유효범위
+var Set = (functino invocation() {
+  function Set() {
+    this.value = {};
+    this.n = 0;
+    this.add.apply(this, arguments);
+  }
+  
+  Set.prototype.contains = function(value) {
+    return this.values.hasOwnProperty(v2s(value));
+  };
+  
+  Set.prototype.size = function() { return this.n };
+  ...
+  functino v2s(val) { ... 전과동일 }
+  function objectId(o) { ... 전과동일 }
+  var nextId = 1;
+  
+  return Set;
+}());
+
+기본적 모듈 코드는 유효범위 내에 봉인되어 있어서 밖으로 꺼내야함.
+var collections;
+if (!collections) collections = {};
+//sets 모듈 정의
+collections.sets = (function namespace() {
+  //지역번수와 지역함수 여기에 설정, 여러종류의 set클래스 이곳에 정의. (코드생략)
+  
+  //네임스페이스 객체를 반환함으로써 API를 외부로 내보냄.
+  return {
+    AbstractSet: AbstractSet,
+    NotSet: NotSet,
+    ...
+  };
+}());
+
+//new를 사용하여 모듈 함수를 생성자처럼 호출한 다음 생성자 내에서 this에 API들을 할당함으로써 API 외부로 내보낼수 있음.
+var collections;
+if (!collections) collections = {};
+collections.sets = (new function namespace() {
+  ...
+  //API를 this객체에 할당함으로써 외부로 내보냄.
+  this.AbstractSet = AbstractSet;
+  this.NotSet = NotSet;
+  //아무값도 반환하지 않는다.
+}());
+
+다른 방법도 가능. -> 네임스페이스가 이미 정해져 있다면 해당 객체에 직접적으로 프로퍼티 설정 가능(어떤값도 반환필요없음)
+var collections;
+if (!collections) collections = {};
+collections.sets = {};
+(function namespace() {
+  ...
+  
+  collections.sets.AbstractSet = AbstractSet;
+  collections.sets.NotSet = NotSet;
+  ...
+  
+  //앞에서 완료했기 떄문에 return 불필요.
+}());
 ```
