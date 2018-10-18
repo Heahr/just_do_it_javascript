@@ -699,3 +699,98 @@ collections.sets = {};
   //앞에서 완료했기 떄문에 return 불필요.
 }());
 ```
+
+18/10/18
+크로스코드랑는 게임을 보고나서 들은 소식은 오직 HTML5로만 만들었다는 사실.
+뭐... 여기저기서 들은거이긴 하지만 재능보다는 많이 해보면서 느끼는게 중요하다 라고는 하지만.. 그 정도의 재능정도를 가지고 있어야 활용하고 만들고 무언가를 만들어 낼수 있지 않을까 싶었다 이것저것 해보면서 스펙트럼 늘리는것도 당연하게 중요한거고..
+어중간하게 개발을 하고있지는 않은가.. 싶었다 재능도없으면서, 일단 노력만 죽어라 하는게 과연 그런사람들과 같이 일할수있을까..
+우선 재미는 있지만 노력으로 충분하게 하고 있는가 싶었다. 공부는 죽어라해도 뭔가 자꾸 앞이 막힌 느낌이든다.
+
+
+```
+var url = /(\w+):\/\/([\w.]+)\/(\S*)/;
+var text = "Visit my blog at http://www.example.com/~david";
+var result = text.match(url);
+if(!result != null){
+  var fullurl = result[0];    -> http://www.example.com/~david 저장
+  var protocol = result[1];   -> http
+  var host = result[2];       -> www.example.com
+  var path = result[3];       -> ~david
+}
+```
+
+```
+var pattern = /Java/g;
+var text = "JavaScript is more fun than Java"
+var result;
+while((result = patern.exec(text)) != null) {
+  alert("Matched " + result[0] + "'" + "at position " + result.index + "; next search begins at " + pattern.lastIndex);
+}
+```
+
+```
+E4X(ECMAScript for XML) for each
+let o = {one: 1, two: 2, three: 3}
+for (let p in o) console.log (p);       -> "one", "two", "three" 출력
+for each (let v in o) console.log(v);   -> 1, 2, 3 출력
+```
+
+```
+using nodejs ex)
+
+var http = require('http');
+var fs = require('fs');
+
+var server = new http.Server();
+server.listen(8000);
+
+server.on("request", function (request, response) {
+  var url = require('url').parse(request.url);
+  
+  if (url.pathname == "/test/delay") {
+    var delay = parseInt(url.query) || 2000;
+    response.writeHead(200, {"Content-Type": "text/plain; charset=UTF-8"});
+    response.write("Sleeping for " + delay + " milliseconds..");
+    setTimeout(function() {
+      response.write("done");
+      response.end();
+    }, delay);
+  }
+  
+  else if(url.pathname === "/test/mirror") {
+    response.writeHead(200, {"Content-Type": "text/plain; charset=UTF-8"});
+    response.write(request.method + " " + request.url + " HTTP/" + request.httpVersion + "\r\n");
+    for(var h in request.headers) {
+      response.write(h + ": " + request.headers[h] + "\r\n");
+    }
+    response.write("\r\n");
+    request.on("data", function(chunk) { response.write(chunk); });
+    request.on("end", function(chunk) { response.end(); });
+  }
+  
+  else {
+    var filename = url.pathname.substring(1);
+    var type;
+    switch(filename.substring(filename.lastIndexOf(".")+1)) {
+      case "html":
+      case "htm":       type = "text/html; charset=UTF-8"; break;
+      case "js":        type = "application/javascript; charset=UTF-8"; break;
+      case "css":       type = "text/css; charset=UTF-8"; break; break;
+      case "txt":       type = "text/plain; charset=UTF-8"; break;
+      case "manifest":  type = "text/cache-manifest; charset=UTF-8"; break;
+      default:          type = "application/octet-stream"; break;
+    }
+    
+    fs.readFile(Filename, function(err, content) {
+      response.writeHead(404, {"Content-Type": "text/plain; charset=UTF-8"});
+      response.write(err.message);
+      response.end();
+    }
+    else {
+      response.writeHead(200, {"Content-Type": type});
+      response.write(content);
+      response.end();
+    }
+  });
+});
+```
