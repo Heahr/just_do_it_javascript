@@ -1,6 +1,15 @@
 # just_do_it_javascript
 무작정 써보기
-
+***
+ES3: 대중적, IE8까지, 함수단위 스코프, 호이스팅, 프로토타입, 모듈화 미지원
+ES5: The "use strict" Directive, String.trim(), 
+Array
+```
+isArray(), forEach(), map(), filter(), reduce(), reduceRight(), every(), some(), indexOf(), lastIndexOf()
+```
+JSON.parse(), JSON.stringify(), Date.now(), Property Getters and Setters, New Object Property Methods
+ES6: let, const, JavaScript default parameter values, Array.find(), Array.findIndex()
+***
 복습과 겸해서 하고있어서 느릴수 있음.
 
 ```
@@ -793,4 +802,88 @@ server.on("request", function (request, response) {
     }
   });
 });
+```
+
+```
+...
+<style>
+.reveal * { display: none; }
+.reveal *.handle { display: block; }
+</style>
+<script>
+window.onload = function() {
+  var elements = document.getElementsByClassName("reveal");
+  for(var i = 0; i < elements.length; i++) {
+    var elt = elements[i];
+    var title = elt.getElementsByClassName("handle")[0];
+    title.onclick = function() {
+      if(elt.className == "reveal") elt.className = "revealed";
+      else if(elt.className == "revealed") elt.className = "reveal";
+    }
+  }
+}
+</script>
+...
+<body>
+<div class="reveal">
+<h1 class="handle"> ??? </h1>
+</div>
+</body>
+```
+
+```
+...
+<script>
+function displayTime() {
+  var elt = document.getElementById("clock");
+  var now = new Date();
+  elt.innerHTML = now.toLocaleTimeString();
+  setTimeout(displayTime, 1000);
+}
+window.onload = displayTime;
+</script>
+...
+<body>
+<h1>clock</h1>
+<span id="clock"></span>
+</body>
+...
+```
+
+```
+<a href="javascript: var e = "", r = "";
+  do {
+    e = prompt("Expression: " + e + "\n" + r + "\n", e);
+    try {
+      r = "Result: " + eval(e);
+    } catch {
+      r = ex;
+    } while(e);
+    void 0;
+'>
+Javascript Evaluator
+</a>
+```
+
+```
+function loadasync(url) {
+  var head = document.getElementsByTagName("head")[0];
+  var s = document.createElement("script");
+  s.src = url;
+  head.appendChild(s);
+}
+```
+
+```
+function onLoad(f) {
+  if (onLoad.loaded)
+    window.setTimeout(f, 0);
+  else if (window.addEventListener)
+    window.addEventListener("load", f, false);
+  else if (window.attachEvent)
+    window.attachEvent("onload", f);
+}
+
+onload.loaded = false;                       -> 문서를 모두 불러오지 못했을때 나타내는 플래그 지정해서 시작.
+onLoad(function() { onLoad.loaded = ture }); -> 문서를 불러올때 플래그를 지정할 함수 등록.
 ```
