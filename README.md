@@ -2,12 +2,15 @@
 무작정 써보기
 ***
 ES3: 대중적, IE8까지, 함수단위 스코프, 호이스팅, 프로토타입, 모듈화 미지원
-ES5: The "use strict" Directive, String.trim(), 
+
+ES5: The "use strict" Directive, String.trim()
+
 Array
 ```
 isArray(), forEach(), map(), filter(), reduce(), reduceRight(), every(), some(), indexOf(), lastIndexOf()
 ```
 JSON.parse(), JSON.stringify(), Date.now(), Property Getters and Setters, New Object Property Methods
+
 ES6: let, const, JavaScript default parameter values, Array.find(), Array.findIndex()
 ***
 복습과 겸해서 하고있어서 느릴수 있음.
