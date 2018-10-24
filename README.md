@@ -890,3 +890,83 @@ function onLoad(f) {
 onload.loaded = false;                       -> 문서를 모두 불러오지 못했을때 나타내는 플래그 지정해서 시작.
 onLoad(function() { onLoad.loaded = ture }); -> 문서를 불러올때 플래그를 지정할 함수 등록.
 ```
+
+```
+http://jquery.com
+
+css클래스 clicktohide의 클릭 반응.
+$(".clicktohide").click(function() { $(this).slideUp("slow"); });
+
+var img = $("<img/>", { src: url, css: { borderWidth: 5 }, click: handleClick });
+
+$(":header").map(function() { return this.id; }).toArray().sort();
+$("div").each(function() { if ($(this).is(":hidden")) return; //나머지 작업 }); -> 숨겨진요소 무시
+
+$("form").attr("action");                           -> 첫 form 요소 action 속성 조회
+$("#icon").attr({src:"banner.gif", width: 720});    -> 한번에 여러번 속성지정.
+$("a").attr("target", "_ blank");                   -> 모든링크 새창 열기
+$("a").attr({target: function() {...});             -> 함수 넘기기 가능
+
+$("h1").css({ backgroundColor: "black", textColor: "white" });
+$("h1").css("font-size", function(i, curval) {
+  return Math.round(1.25 * parseInt(curval));
+});
+
+$("h1").addClass("hihlte");                         -> 모든 h1 태그에 클래스 하나 추가.
+$("h1").toggleClass(function(n) { return "section" + n });    -> 계산된 클래스를 토글한다(있으면 삭제, 없으면 추가)
+
+$("input:redio[name=ship]:checked").val()           -> 체크된 라디오 버튼의 값을 가져온다.
+$("#email").val("Invalid email address")            -> 텍스트 필드에 값을 지정한다.
+$("input:text").val(function() { return this.defaultValue; })   -> 모든 텍스트 필드를 기본 값으로 초기화한다.
+
+var title = $("head title").text()                  -> 문서 제목을 가져온다.
+var headline = $("h1").html()                       -> 첫 번째 h1 태그의 html을 가져온다.
+$("h1").text(function(n, currnet) {                 -> 각 헤딩 태그 앞에 절 번호를 넣는다.
+  return "$" + (n+1) + ":" + current });
+  
+var elt = $("#sprite");                             -> 움직이려는 요소 선택
+var position = elt.offset();                        -> 현재위치를 가져온다.
+position.top += 100;                                -> y좌표를 바꾼다.
+elt.offset(position);                               -> 새 위치를 지정한다.
+//모든 h1 태그를 문서 내 원래 위치를 기준으로 오른쪽으로 이동시킨다.
+$("h1").offset(function(index, curpos) {
+  return { left: curpos.left + 25*index, top: curpos.top }; });
+
+function page(n) {
+  var w = $(window);                                -> window를 jQuery 객체로 감싼다.
+  var pagesize = w.height();                        -> 페이지 크기를 가져온다.
+  var current = w.scrollTop();                      -> 현재 스크롤바 위치를 가져온다.
+  w.scrollTop(current + n*pagesize);                -> 새 스크롤바 위치를 지정한다.
+}
+
+$("div").data("x", 1);                              -> 데이터를 지정한다.
+$("div.nodata").removeData("x");                    -> 이 데이터를 제거한다.
+var x = $("#mydiv").data("x");                      -> 데이터를 조회한다.
+
+befor, after 가능
+$("hr").replaceWith("<br/>");                       -> <hr/> 태그를 <br/>로 교체.
+$("h2").each(function() {                           -> h2 내용유지하면서 h1으로 교체.
+  var h2 = $(this);
+  h2.replaceWith("<h1>" + h2.html() + "</h1>");
+});
+//h1의 내용앞에 절 구분자를 넣는 다른방법.
+$("h1").map(function() { return this.firstChild; }).before("$");
+
+$("<br/>+massage").appendTo("#log");                -> id가 log인 요소에 html을 덧 붙인다.
+$(document.createTextNode("$")).prependTo("h1");    -> 모든 h1요소에 텍스트 노드를 덧붙인다.
+$("<hr/>").insertBefore("h1");                      -> 모든 h1 앞쪽에 구분선 추가
+$("<hr/>").insertAfter("h1");                       -> 모든 h1 뒤쪽에 구분선 추가.
+$("<br/>").replaceAll("hr");                        -> hr/을 br/로 모두 바꾼다.
+
+//문서 끝에 id 가 linklist인 신규 div 추가.
+$(document.body).append("<div id='linklist'><h1>List Links</h1></div>");
+$("a").clone().appendTo("#linklist");               -> 문서의 모든 링크를 복사해서 새로운 div 에 넣는다.
+$("#linklist > a").after("<br/>");                  -> 각 링크 뒤쪽에 br태그를 삽입해서 줄바꿈을 한다.
+
+$("h1").wrap(document.createElement("i"));          -> i 태그로 h1 태그를 감싼다.
+$("h1").wrapInner("<i/>");                          -> 모든 h1 태그의 내용을 감싼다. 문자열 전달인자 사용이 더 쉽다.
+//첫 번째 문단은 a와 div 로 감싸고
+$("body>p:first").wrap("<a name='lead'><div class='first'></div></a>");
+//나머지 문단은 별도의 div 로 감싼다.
+$("body>p:not(:first)").wrapAll("<div class='rest'></div>");
+```
