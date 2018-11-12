@@ -22,7 +22,7 @@ function inherit(p) {
     return Object.create(p);
   var t = type p;
   
-  if (t !== "object" && t !== "function") throw TypeError();
+  if (t !== 'object' && t !== 'function') throw TypeError();
   function f();
   f.prototype = p;
   return new f();
@@ -50,7 +50,7 @@ function restrict(o, p) {
 
 ```
 function key(o) {
-  if (typeof o !== "object") throw TypeError();
+  if (typeof o !== 'object') throw TypeError();
   var result = [];
   for (var prop in p) {
     if(o.hasOwnPrototype[prop])
@@ -61,7 +61,7 @@ function key(o) {
 ```
 
 ```
-Object.defineProperty(Object.prototype, "extend", {
+Object.defineProperty(Object.prototype, 'extend', {
   writable: true,
   enumerable: false,
   configurable: true,
@@ -79,7 +79,7 @@ Object.defineProperty(Object.prototype, "extend", {
 ```
 function isArrayLike(o) {
   if (o &&
-    typeof o === "object" &&
+    typeof o === 'object' &&
     o.length >= 0 &&
     o.length === Math.floor(o.length) &&
     o.length < 4294967296)
@@ -235,6 +235,7 @@ function partialRight(f) {
   };
 }
 
+//하나의 클래스로 여러개의 파일로 분할해서 보기 편하기 사용할 때 사용
 function partial(f) {
   var args arguments;
   return function() {
@@ -969,4 +970,24 @@ $("h1").wrapInner("<i/>");                          -> 모든 h1 태그의 내�
 $("body>p:first").wrap("<a name='lead'><div class='first'></div></a>");
 //나머지 문단은 별도의 div 로 감싼다.
 $("body>p:not(:first)").wrapAll("<div class='rest'></div>");
+
+//jquery로 이벤트 다루기
+$("p").click(functino() { $(this).css("background-color", "gray"); });
+$("<img/>", { src: image_url, alt: image_description, className: "translucent_image", click: function() { $(this).css("opacity", "50%"); } });
+//이벤트 등록할때에 bind함수를 사용할 수 있음.
+$('p').bind('click', f);
+$('a').bind('mouseenter mouseleave', f);              -> hover 형태
+$('a').bind('mouseover.myMod', f);
+$('a').bind('mouseout.myMod.yourMod', f);             -> myMod 와 yourMod에 함수 f 할당.
+//마우스 이벤트 핸들러 등록 해제
+$('a').unbind("mouseover.myMod mouseout.myMod");
+$('a').unbind(".myMod");                              -> myMod 네임스페이스의 어떤 이벤트의 핸들러는 상관없이 해제한다.
+$('a').unbind("click.ns1.ns2");                       -> ns1과 ns2 네임스페이스 둘 모두에서 clikc핸들러는 해제한다.
+$('#mybutton').unbind('click', myClickHandler);
+//이벤트 일으키기
+$('#my_form').submit();                               -> $('#my_form').trigger('submit');
+$('button').trigger('click!');                        -> 네임스페이스가 없는 click 이벤트의 핸들러를 실행한다.
+$('#button1').click(function(e) { $('#button2').trigger(e); });       -> button1의 click 이벤트 핸들러가 button2의 click도 일으킨다.
+$('#button1').trigger('click', true);                 -> 한 개의 확장 전달인자 넘기기
+$('#button1').trigger('click, [x, y, z]);             -> 세 개의 확장 전달인자 넘기기
 ```
