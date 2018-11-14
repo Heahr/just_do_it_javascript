@@ -1019,4 +1019,87 @@ $('a').die('mouseover', linkHandler);                 -> 지정한 라이브 이
 $(document).undelegate('a');                          -> a태그의 모든 라이브 이벤트 핸들러를 제거한다.
 $(document).undelegate('a', 'mouseover', linkHandler);-> linkHandler 핸들러만 mouseover 라이브 이벤트 핸들러를 제거한다.
 
+//애니메이션 효과 주기
+-jQuery.fx.speeds에 새로운 문자열/숫자 매핑 값을 추가하면 새로운 지속 시간명을 정의할 수 있다.
+jQuery.fx.speeds["medium-fast"] = 300;
+jQuery.fx.speeds["medium-slow"] = 500;
+
+$("#message").fadeIn();                               -> 요소가 400밀리초 속도로 나타난다.
+$("#message").fadeOut().("fast");
+
+-> 요소를 빠르게 노출하고, 노출되면 그 안에 텍스트를 출력한다.
+$("message").fadeIn("fast", function() { $(this).text("Hello world"); });
+
+$("#blinker").fadeIn(100).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn();
+
+-> 전달인자가 아닌 객체 프로퍼티로 지속 시간과 콜백을 전달한다.
+$("#message").fadeIn({
+  duration: "fast",
+  complete: function() { $(this).text("Hello World"); }
+});
+
+//간단한 시각 효과들
+***
+fadeIn(), fadeOut(), fadeTo(), show(), hide(), toggle(), slideDown(), slideUp(), slideToggle()
+***
+-> 모든 이미지를 숨겼다가 노출하고, 위로 쓸어 올렸다가 쓸어내린다.
+$("img").fadeOut(),show(300).slideUp().slideToggle();
+
+->사용자 정의 애니메이션
+$("img").animate({ height: 0 });                        -> 높이가 0으로 줄어든다.
+
+$("sprite.animate({
+  opacity: .25,                                         -> 불투명도 0.25로 애니메이션
+  font-size: 10                                         -> 폰트 크기를 10픽셀로 애니메이션
+},{
+  duration: 500,                                        -> 0.5초 동안 애니메이션
+  complete: function() {                                -> 애니메이션 후 호출할 콜백 함수
+    this.text("goodbye");                               -> 요소의 텍스트 변경
+  }
+});
+
+-> 애니메이션 프로퍼티 객체
+$("p").animate({
+  "margin-left": "+=.5in",                              -> 문단 들여쓰기를 늘린다.
+  opacity: "-=.1"                                       -> 그리고 불투명도는 줄인다.
+});
+
+$("img").animate({                                      -> 오른쪽으로 쓸어내리는 효과.
+  width: "hide",
+  borderLeft: "hide",
+  borderRight: "hide",
+  paddingLeft: "hide",
+  paddingRight: "hide"
+});
+
+-> 사용자 정의 easing 함수를 지정할 수 있는 specialEasing 옵션을 사용한다.
+$("img").animate({ width: "hide", height: "hide", opacity: "hide" },
+  {specialEasing: { width: "linear", height: "liner" }});
+-> animate()의 첫 전달인자에서 값을 [목표 값, easing 함수] 형태의 배열로 넘긴다.
+$("img").animate({
+  width: ["hide", "linear"], height: ["hide", "linear"], opacity: "hide" });
+  
+//시각 효과의 취소, 지연, 대기열 처리
+-> 마우스를 이미지에 올리면 불투명하게 된다. 하지만 마우스 이벤트로 애니메이션 대기열을 만들진 않는다.
+$("img").bind({
+  mouseover: function() { $(this).stop().fadeTo(300, 1.0); },
+  mouseout: function() { $(this).stop().fadeTo(300, 0.5); }
+});
+-> 재빨리 반만 흐리게 만들고, 기다렸다가, 쓸어 올린다.(slide up).
+$("img").fadeTo(100, 0.5).delay(200).slideUp();
+-> 이미지 위를 마우스로 한번에 빨리 지나가는 경우에는 애니메이션 실행되지 않는다.
+$("img").bind({
+  mouseover: functino() { $(this).stop(true).delay(100).fadeTo(300, 1.0); },
+  mouseout: function() { $(this).stop(true).fadeTo(300, 0.5); }
+});
+-> 문서 요소를 나타나게 하고, 기다렸다가 그 안에 텍스트를 뿌리고 테두리를 두껍게 한다.
+$("#message").fadeIn().delay(200).queue(function(next) {
+  $(this).text("Hello world");                          -> 문자열 출력
+  next();                                               -> 실행 대기열의 다음 작업 실행
+}).animate({ borderWidth: "+=10px;" });                 -> 테두리를 두껍게 한다.
+
+-> 요소 e의 애니메이션 실행 대기열에 함수 f를 추가할 경우, 유틸리티 함수나 메서드의 형태로 작성하기
+$(e).queue(f);
+-> 요소 e를 감싼 jQuery 객체를 생성해서 queue() 메서드를 호출한다.
+jQuery.queue(e, f);                                     -> 유틸리티 함수인 jQuery.queue()를 호출한다.
 ```
