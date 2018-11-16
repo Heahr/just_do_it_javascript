@@ -1102,4 +1102,71 @@ $("#message").fadeIn().delay(200).queue(function(next) {
 $(e).queue(f);
 -> 요소 e를 감싼 jQuery 객체를 생성해서 queue() 메서드를 호출한다.
 jQuery.queue(e, f);                                     -> 유틸리티 함수인 jQuery.queue()를 호출한다.
+
+//jQuery를 이용한 Ajax
+-> 60초마다 최신 상태 값 결과를 불러와서 출력한다.
+setInterval(function() { $("#stats").load("status_report.html"); }, 60000};
+
+-> 날씨 정보에서 온도 섹션만 불러와 출력한다.
+$('#temp').load("weather_report.html #temperature");
+
+-> 지정한 우편번호의 날씨 정보를 불러온다.
+$('#temp').load("us_weather_report.html", zipcode=02134");
+-> 문자열 대신 객체를 사용해서 온도를 화씨(F)로 지정한다.
+$('#temp').load("us_weather_report.html", {zipcode:02134, units:'F' });
+
+//jQuery.getScript()
+-> 어떤 서버에서 동적으로 script를 불러온다.
+jQuery.getScript("http://example.com/js/widget.js");
+-> 라이브러리를 불러오고 완료되면 사용한다.
+jQuery.getScript("js/jquery.my_plugin.js", function() {
+  $('div').my_plugin();                               -> 불러온 라이브러리를 사용한다.
+}
+
+//jQuery.getJSON()
+-> data.json이 '{"x":1, "y":2}' 텍스트를 갖고 있다고 가정한다.
+jQuery.getJSON("data.json", function(data) {
+  // 여기서 data는 {x:1, y:2} 객체다.
+});
+
+//jQuery.get()과 jQuery.post()
+
+$(document).ready(function() {
+  $("button").click(function() {
+    $get("demo_text.asp", function(data, status) {
+      alert("data:" + data + "\n status:" + status);
+    });
+  });
+});
+
+-> 서버에 텍스트를 요청해서 alert 대화상자에 출력한다.
+jQuery.get("debug.txt", alert);
+
+//jQuery.ajax() 함수
+jQuery.ajax({
+  type: "GET",                                      -> HTTP 요청방법
+  url: url,                                         -> 가져올 데이터 URL
+  data: null,                                       -> URL에 데이터를 추가하지 않는다.
+  dataType: "script",                               -> 가져와서 스크립트로 응답 값을 실행한다.
+  success: callback                                 -> ajax가 잘 실행되면 이 함수를 호출한다.
+});
+
+jQuery.ajaxSetup({
+  timeout: 2000,                                    -> Ajax 요청 후 2초가 지나면 중단한다.
+  cache: false                                      -> URL에 타임스탬프를 붙여서 브라우저 캐시를 무효화한다.
+});
+
+공통옵션
+type  url data  dataType  contentType timeout cache ifModified  global
+콜백  context beforeSend  success error complete  
+
+기타 옵션과 후크
+async dataFilter  jsonp jsonpCallback processData scriptCharset traditional
+username.password xhr 
+
+//Ajax 이벤트
+$("#loading_animation").bind({
+  ajaxStart: function() { $(this).show(); },
+  ajaxStop: function() { $(this).hide(); }
+});
 ```
