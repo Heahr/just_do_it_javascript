@@ -1169,4 +1169,54 @@ $("#loading_animation").bind({
   ajaxStart: function() { $(this).show(); },
   ajaxStop: function() { $(this).hide(); }
 });
+
+//jQuery 선택자와 선택관련 메서드
+#id .class  :animated :button :checkbox :checked  :file :disabled :header :nth-child  :submit 등등...
+
+결합 선택자
+"blockquote i"                                    -> <blockqute> 안에있는 i를 선택
+"ol > li"                                         -> <ol> 바로 아래 자식 요소 중 <li>를 선택
+"#output + *"                                     -> id = "output"인 요소 바로 뒤의 형제 요소
+"div.note > h1 + p"                               -> <div class="note"> 바로 아래 자식요소중 <h1> 뒤에 있는 <p>
+
+선택자 그룹
+"h1, h2, h3"                                      -> h1, h2, h3 모두 선택
+"#p1, #p2, #p3"                                   -> ID가 p1, p2, p3 요소 선택
+"div.note, p.note"                                -> class='note'인 <div>, <p> 선택
+"body>p, div.ote>p"                               -> <body>와 <div class="note">의 자식 요소 <p> 선택
+
+선택 관련 메서드
+var paras = $("p");
+paras.first()                                     -> 첫 번째 <p>만 선택한다.
+paras.last()                                      -> 마지막 <p>만 선택한다.
+paras.eq(1)                                       -> 두번째 <p>를 선택한다
+paras.eq(-2)                                      -> 뒤에서 두 번째 <p>를 선택한다.
+paras[1]                                          -> 자신의 두번째 <p>. jQuery 객체가 아니다.
+$("p").slice(2, 5)                                -> 세 번째, 네 번째, 다섯 번째 <p>를 선택한다.
+$("div").slice(-3)                                -> 끝에서 <div> 세 개를 선택한다.
+$("div").filter(".note")                          -> $("div.note")와 같다.
+$("div").filter($(".note"))                       -> $("div.note")와 같다.
+$("div").filter(functino(idx) { return idx%2 == 0 })  -> $("div.even")와 같다.
+$("div").not("#header, #footer")                  -> 특정 요소 두 개를 제외한 모든 <div> 요소
+$("p").has("a[href]")                             -> 링크를 포함한 <p>
+->모든 div와 p를 선택하는 방법들
+$("div, p")                                       -> 선택자 그룹을 사용한다
+$("div").add("p")                                 -> add에 선택자를 넘긴다.
+$("div").add($("p"))                              -> add에 jQuery 객체를 넘긴다,
+var paras = document.getElementsByTagName("p")    -> paras는 유사 배열 객체
+$("div").add(paras)                               -> add에 요소 배열을 넘긴다.
+
+컨텍스트로 선택물 사용하기
+$("div").find("p")                                -> div 안에 있는 p 요소를 찾는다. $("div p")와 같다.
+-> id가 header나 footer인 요소의 자식 요소에서 span을 모두 찾는다.
+-> $("header>span, #footer>span")와 같다.
+$(#header, #footer").children("span")
+$("h1").next("p")
+$("h1").prev()
+#("footer").nextAll("p")                          -> #footer 요소 뒤쪽의 모든 <a> 형제 요소
+$("footer").prevAll()                             -> #footer 요소 앞쪽의 모든 형제 요소
+$("li").parent()                                  -> ul과 ol같은 목록의 부모 요소를 선택한다.
+$("a[href]").parents("p")                         -> 링크를 가진 p 요소들
+$("a[href]").closest("div")                       -> 링크를 가진 가장 가까운 div
+$("a[href]").parentsUntil(":not(div)")            -> a를 직접 감싼 모든 div
 ```
