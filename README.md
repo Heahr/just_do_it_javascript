@@ -1219,4 +1219,30 @@ $("li").parent()                                  -> ul과 ol같은 목록의 �
 $("a[href]").parents("p")                         -> 링크를 가진 p 요소들
 $("a[href]").closest("div")                       -> 링크를 가진 가장 가까운 div
 $("a[href]").parentsUntil(":not(div)")            -> a를 직접 감싼 모든 div
+
+18.11.23 알고리즘 공부 다시시작
+현제 하고있는 곳에서도 그렇고 인턴이던 스타트업이던 기본적으로 계속해서 알고리즘 시험을 보고싶어하고 보고있다.
+기본적으로 어느정도 되는지 알기위해 거름망을 설치하는 느낌이랄까.. 아무튼 그것을 위해서 조금 늦은감이 없이 않아있지만..
+ICPC했던 기억을 좀 떠올려서 취업전까지 지속적으로 해야할것같다.
+
+// 사전 선택물의 반전
+-> 모든 div를 찾는다 그리고 그 안에서 p태그를 찾는다.
+-> p에 highlight CSS 클래스를 적용하고 div에는 테두리를 준다.
+var divs - $('div');
+var paras = divs.find('p');
+paras.addClass('highlight');
+divs.css('border', 'solid black 1px');
+// 여기서는 메서드 체인으로 처리한다.
+$('div').find('p').addClass('highlight').end().css('border', 'solid black 1px');
+// 또는 처리 순서를 변경해서 end() 호출을 피할 수 있다.
+$('div').css('border', 'solid black 1px').find('p').addClass('highlight');
+
+var sel = $('div'); 
+sel.pushStack(document.getElementByTagName('p')); -> 선택물을 p 태그로 변경
+sel.end();                                        -> div 태그로 복구한다.
+
+$('div').find('p').andSelf().                     -> div 안에서 p 를 찾고 둘이 합친다.
+  addClass('highlight').                          -> highlight CSS클래스 적용
+  end().end().                                    -> $('div')로 돌리기 위해 스택을 두 번 빼온다.
+  css('border', 'solid'black 1px');               -> div에 테두리를 준다.
 ```
