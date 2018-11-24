@@ -1246,3 +1246,44 @@ $('div').find('p').andSelf().                     -> div 안에서 p 를 찾고 
   end().end().                                    -> $('div')로 돌리기 위해 스택을 두 번 빼온다.
   css('border', 'solid'black 1px');               -> div에 테두리를 준다.
 ```
+18.11.24 첫눈
+css는 kakaotalk관련 글에 정리해뒀으며, 개인적인 공부이기 때문에 따로 정리하지는 않겠습니다. 
+
+실행환경이 정의 되지 않은 자바스크립트는 코드 조각일 뿐이다. 
+
+//클라이언트 측 자바스크립트
+Window 객체는 클라이언트 측 자바스크립트의 기능과 API에서 핵심적인 진입점 이며, 객체는 웹브라우저의 창이나 프레임을 나타내고, 따라서 특정 창을 Window 객체로 참조할 수 있다.
+Window 객체는 location과 같은 프로퍼티들을 제공하는데, location프로퍼티는 Location 객체를 가리킨다. 이 객체는 창에 현재 보이는 URL을 나타내고 또한 새로 주어진 URL을 불러올 수 있게 해준다.
+```
+window.location = "http://www.oreilly.com/";
+setTimeout(function() { alert("hello world"); }, 2000);
+```
+Window 객체가 전역 객체임에 주의한다. Window객체는 유효범위 체인의 최상위에 있으며, Window객체의 프로퍼티와 메서드가 사실 전역 변수와 전역함수 라는 의미다.
+
+Window 객체의 가장 중요한 프로퍼티 중 하나인 document는 창에 표시된 내용에 해당하는 Document 객체를 참조한다. 
+Document 객체에는, 주어진 id 속성값을 가진 문서 요소 하나를 반환하는 getElementById()와 같은 중요한 메서드들이 있다. 여기서 문서요소란 HTML 태그 쌍과 그 안의 내용 전부를 담고 있는 HTML요소다.
+```
+var timestamp = document.getElementById("timestamp");
+```
+
+문서의 내용을 조회하고, 탐색하고 수정하는 기법도 가능하다.
+```
+timestamp.style.backgroundColor = "yellow";
+timestamp.className = "highlight";
+```
+ style과 className 프로퍼티, CSS를 구성하는 다른 기법들도 가능하다.
+ 이벤트 핸들러 프로퍼티도 Window, Document, Element 객체의 중요한 프로퍼티인데, 어떤 이벤트가 발생할 때 비동기로 호출할 함수를 지정할 수 있다. 즉, 문서를 꾸미기 위해 window, document, element의 동작을 수정하는 자바스크립트 코드를 넣을 수 있으며, 해당 프로퍼티의 이름은 접두사 'on' 으로 시작한다.
+```
+timestamp.onclick = function() { this.innerHTML = new Date().toString(); }
+```
+
+웹 애플리케이션은 웹 문서의 자바스크립트 DHTML 기능을 모두 사용할 뿐만 아니라, 이를 넘어서서 웹 브라우저 환경이 제공하는 내용과 표현, 행위를 조작하는 API 등등의 핵심 부가 서비스를 제공한다.
+웹 애플리케이션을 확실히 이해하려면, 웹브라우저가 문서를 보여주는 도구를 넘어서서, 간단한 운영체제로 탈바꿈 했음을 깨우쳐야한다. 브라우저가 제공하는 (네트워킹, 그래픽, 데이터 스토리지 같은) 확장된 서비스를 이용하기 위해 자바스크립트를 사용한 웹 페이지를 웹 애플리케이션이라고 정의할 수 있다. 확장 서비스중 가장 유명한 것은 XMlHttpRequest 객체다.
+
+HTML안에 자바스크립트 포함하는 4가지
+```
+<script> 태그와 </script> 태그 안에 직접 작성.
+<script> 태그의 src 속성에 별도 파일로 정의.
+onclick이나 onmouseover 같은 HTML 이벤트 핸들러 속성 안에 작성.
+javascript:라는 특별한 프로토콜을 사용해서 URL안에 작성.
+```
