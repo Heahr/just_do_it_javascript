@@ -1353,4 +1353,53 @@ ex) orders.example.com과 catalog.example.com 에서 불러온 문서끼리 협�
 2. 현재 만들어지고 있는 출처 간 자원 공유(CORS)란 이름의 표준안이다. 이 표준 초안은 요청 헤더와 Access-Control-Allow-Origin이라는 응답 헤더로 HTTP의 출처를 확장한다. 그래서 파일 요청이 들어올 명시적인 출처 목록의 헤더나 와일드카드를 서버에 사용할 수 있고, 그러면 어느 사이트에서든 요청할 수 있는 파일 제공이 가능하다.
 3. 교차 출처 문서 간 메시지 교환인데, 스크립트의 출처가 달라도 이 문서에서 저 문서로 텍스트 메시지를 전달할 수 있다.
   
-
+//문서 스크립팅
+클라이언트 측 자바스크립트는 정적인 HTML 문서를 상호작용이 가능한 웹 애플리케이션으로 바꾸는 역할을 하며, 이렇게 웹 페이지의 내용을 제어하는 게 자바스크립트의 주된 작업이다. 다음은 문서 내용 제어에 대한 간단한 설명이다.
+모든 Window 객체에는 Document 객체를 참조하는 document 프로퍼티가 존재하고, Document 객체는 해당 창의 내용을 나타낸다.
+Document는 DOM으로 알려진 문서 객체 모델의 거대한 API의 일부이며 그중 문서 내용을 나타내고 조작하는 역할을 하는 중요한 객체다.
+HTML이나 XML 문서의 요소 집합이 DOM에서는 객체의 계층구조로 표현된다는 사실을 알아야 한다. 이렇게 HTML 문서를 계층적으로 표현한 DOM은 <body>와 <p> 같은 HTML 태그나 요소를 나타내는 노드, 텍스트의 문자열을 나타내는 노드를 포함하고 있다.
+```
+<html>
+  <head>
+    <title>Sample Document</title>
+  </head>
+  <body>
+    <h1>HTML Document</h1>
+    <p> yap <i> yapp </i> yappp </p>
+  </body>
+</html>
+```
+다음은 위 문서를 계층 구조로 표현한 DOM 형태다.
+```
+Document -> <html> -> <head> -> <title> -> "Sample Document"
+                   -> <body> -> <h1> -> "HTML Document"
+                             -> <p> -> "yap"
+                                    -> <i> -> "yapp"
+                                    -> "yappp"
+```
+문서 전체를 나타내는 Document 노드가 있고, 아래쪽으로는 HTML 요소를 나타내는 element 노드와 텍스트를 나타내는 Text 노드가 있다.
+다음은 Node들의 하위 타입과 계층구조를 보여주며, Document 타입은 HTML 또는 XML 문서를 나타내며, Element 클래스는 그 문서의 요소를 나타낸다. 반면 제네릭 타입의 서브클래스인 HTMLDocument와 HTMLElement는 좀 더 구체적으로 HTML의 문서와 요소만을 말한다.
+```
+Node -> Document -> HTMLDocument
+     -> CharacterData -> Text
+                      -> Comment
+     -> Attr
+     -> Element -> HTML Element -> HTMLHeadElement
+                                -> HTMLBodyElement
+                                -> HTMLTitleElement
+                                -> HTMLParagraphElement
+                                -> HTMLInputElement
+                                -> HTMLTableElement
+                                -> 등등...
+```
+HTMLElement의 서브타입은 HTML 단일 요소나 요소 집합의 속성에 해당하는 자바스크립트 프로퍼티를 정의한다. 이 중 몇 가지 특정 요소는 단순히 HTML 구문을 나타내는 데 그치지 않고 추가 프로퍼티와 메서드를 정의한다.
+Comment 노드는 HTML이나 XML의 주석을 나타낸다. 주석은 기본적으로 텍스트 문자열이므로, 문서의 text 출력을 나타내는 Text 노드와 많이 비슷하다.
+Attr 노드는 XML이나 HTML의 속성을 나타내지만 거의 사용하지 않는다. 속성은 문서의 노드보다는 이름과 값의 쌍으로 된 형태가 다루기 편한데, 이런 속성을 제어하는 메서드들이 Element클래스에 정의되어 있기 때문이다.
+  
+//문서 요소 선택
+Document 객체를 참조할 땐 전역변수 document를 사용하면 되지만, 문서의 각 요소를 수정하려면 해당 요소를 가리키는 Element 객체를 선택할 방법이 있어야한다.
+1. id 속성을 지정해서 선택하기
+2. name 속성을 지정해서 선택하기
+3. HTML 태그 이름을 지정해서 선택하기
+4. CSS class 이름(들)을 지정해서 선택하기
+5. 지정한 CSS 선택자와 일치 여부로 선택하기
