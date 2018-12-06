@@ -1403,3 +1403,95 @@ Document 객체를 참조할 땐 전역변수 document를 사용하면 되지만
 3. HTML 태그 이름을 지정해서 선택하기
 4. CSS class 이름(들)을 지정해서 선택하기
 5. 지정한 CSS 선택자와 일치 여부로 선택하기
+
+// ID로 요소 선택하기
+```
+function getElement(/*ids...*/) {
+  var element = {};
+  for (var i = 0; i < argument.length; i++) {
+    var id = argument[i];
+    var elt = document.getElementById(id);
+    if (elt == null) {
+      throw new Error("No element with id : " + id);
+    element[id] = elt;
+  }
+  return elements;
+}
+```
+
+//Name으로 요소 선택하기
+Document 객체의 getElementByName() 메서드를 사용하면 name속성의 값을 이용해서 HTML요소를 선택할 수 있다.
+```
+var radiobuttons = document.getElementByName("favorite_color");
+```
+다른 여러 요소들의 name들에도 속성설정이 가능하기때문에 이름에 따라 가져와 사용할 수 있다.(form, img, iframe, applet, embed, object)
+-><from name="shippinh_address"> 요소를 의미하는 Element 객체를 가져온다.
+```
+var form = document.shipping_address;
+```
+
+//Type으로 요소 선택하기
+문서 안에 있는 모든 <span>요소에 해당하는 Element 객체를 얻기 위해 다음처럼 작성할 수 있는데, 이 Element 객체를 담고 있는 객체 읽기 전용 배열과 유사한 객체다.
+```
+var spans = document.getElementByTagName("span");
+```
+getElementsByName()과 getElementByTagName() 같은 메서드는 NodeList객체를 반환한다. 반환된 NodeList의 요소는 문서 내 순서를 따른다. 그래서 문서상 첫번째 <p>요소를 선택하려면 다음처럼 하면 된다.
+```
+var firstpara = document.getElementByTagName("p")[0];
+```
+문서의 첫 번째 <p> 요소 안에 있는 모든 <span> 요소를 찾으려면 다음처럼 작성하면 된다.
+```
+var firstpara = document.getElementByTagName("p")[0];
+var firstParaSpans = firstpara.getElementByTagName("span");
+```
+
+getElementByName()과 getElementByTagName()은 NodeList 객체를 반환하며, document.images와 document.forms는 HTMLCollectio객체를 반환한다.
+또한 진짜 배열처럼 접근할수 있고 다음처럼 자바스크립트의 일반적인 반복문으로 NodeList나 HTMLCollection의 내용을 순회할 수 있다.
+```
+for (var i = 0; i < document.images.length; i++) {      -> 모든 이미지에 대한 반복문
+  document.images[i].style.display = "none";            -> 이미지를 숨긴다.
+}
+```
+NodeList와 HTMLCollection에서 배열의 메서드를 직접 호출할 수는 없고 간접적으로는 가능하다.
+```
+var content = Array.prototype.map.call(document.getElementByTagName("p"),
+  function(e) { return e.innerHTML; });
+```
+HTMLCollection객체는 추가로 name 속성이 있는 프로퍼티를 가질 수 있고, 숫자뿐만 아니라 문자열로도 접근할 수 있다.
+
+//CSS Class로 요소 선택하기
+동일한 식별자를 class 속성에 포함하고 있는 모든 요소는 하나의 집합으로 취급되는데, 이번 항목에서는 이를 이용해서 관련된 문서 요소 집합을 정의하는 방법이다.
+HTML5에서 정의된 getElementByClassName()은 class 속성의 식별자를 기반으로 문서 요소의 집합을 선택할 수 있다.
+getElementByClassName()의 전달인자는 문자열 하나지만, 이 문자열에 공백으로 구분된 여러 개의 식별자를 쓸 수도 있다. 따라서 getElementByClassName() 메서드를 사용하면, 문서 요소의 class속성에 메서드 인자로 지정한 식별자들 전부가 있는 요소를 찾는다. (class속성과 getElementByClassName() 메서드에서는 class 식별자의 구분자를 쉼표가아닌 공백을 이용해 구분한다)
+```
+-> class 속성에 waring이 있는 모든 요소를 찾는다.
+var warnings = document.getElementByClassName("warning");
+
+-> 이름이 "log"인 요소의 자손 중에서, class에 "error"와 "fatal"이 있는 요소를 모두 찾는다.
+var log = document.getElementById("log");
+var fatal = log.getElementByClassName("fatal error");
+```
+
+***
+현재의 웹브라우저는 문서 시작 부분의 <!DOCTYPE> 선언 방법에 따라서 쿼크모드 나 표준모드 로 HTML문서를 출력한다.
+쿼크모드는 하위 호환성을 위해 존재하며, class속성과 CSS스타일시트의 class식별자에서 대소문자를 구분하지 않는 약간 특이한 특징이 있다. 그래서 getElementByClassName()은 스타일시트에 사용된 매칭 알고리즘을 따르는데, 문서가 쿼크모드로 렌더링 되면 이 메서드는 대소문자 구분없이 class식별자로 문자열 비교를 수행한다. 쿼크모드가 아니면 대소문자를 구분하여 비교한다.
+
+//CSS선택자로 요소 선택하기
+문서의 요소는 다음처럼 ID와 HTML 태그명, class 속성명으로 선택할 수 있다.
+```
+#nav                                                  -> id 속성이 nav인 요소
+div                                                   -> <div> 요소
+.warning                                              -> class 속성의 값이 warning인 요소
+
+p[lang="fr"]                                          -> 프랑스어 단락인 <p>태그. 즉 <p lang="fr">
+*[name="x"]                                           -> name="x"송성을 가진 어떤 요소
+
+span.fatal.error                                      -> class속성 값에 fatal 과 error 가 있는 span
+span[lang="fr"].warning                               -> class송성 값이 warning인 프랑스어 spna 태그
+
+#log span                                             -> id가 log인 요소의 자손들 중에서 span
+#log>span                                             -> id가 log인 요소의 한 레벨 아래의 span
+body>h1:first-child                                   -> body 한 레벨 아래의 h1 중에서 첫 번째 요소
+
+div, #log                                             -> id가 log 인 요소와 모든 div요소
+```
