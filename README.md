@@ -22,7 +22,20 @@ function inherit(p) {
   if (p == null) throw TypeError();
   if (Object.create)
     return Object.create(p);
-  var t = type p;
+  const t = type p;
+  
+  if (t !== 'object' && t !== 'function') throw TypeError();
+  function f();
+  f.prototype = p;
+  return new f();
+}
+
+-> 변경
+_inherit = (p) => {
+  if (p == null) throw TypeError();
+  if (Object.create)
+    return Object.create(p);                                  -> ?
+  let t = type p;
   
   if (t !== 'object' && t !== 'function') throw TypeError();
   function f();
@@ -1404,7 +1417,7 @@ Document 객체를 참조할 땐 전역변수 document를 사용하면 되지만
 4. CSS class 이름(들)을 지정해서 선택하기
 5. 지정한 CSS 선택자와 일치 여부로 선택하기
 
-// ID로 요소 선택하기
+1. ID로 요소 선택하기
 ```
 function getElement(/*ids...*/) {
   var element = {};
@@ -1419,7 +1432,7 @@ function getElement(/*ids...*/) {
 }
 ```
 
-//Name으로 요소 선택하기
+2. Name으로 요소 선택하기
 Document 객체의 getElementByName() 메서드를 사용하면 name속성의 값을 이용해서 HTML요소를 선택할 수 있다.
 ```
 var radiobuttons = document.getElementByName("favorite_color");
@@ -1430,7 +1443,7 @@ var radiobuttons = document.getElementByName("favorite_color");
 var form = document.shipping_address;
 ```
 
-//Type으로 요소 선택하기
+3. Type으로 요소 선택하기
 문서 안에 있는 모든 <span>요소에 해당하는 Element 객체를 얻기 위해 다음처럼 작성할 수 있는데, 이 Element 객체를 담고 있는 객체 읽기 전용 배열과 유사한 객체다.
 ```
 var spans = document.getElementByTagName("span");
@@ -1459,7 +1472,7 @@ var content = Array.prototype.map.call(document.getElementByTagName("p"),
 ```
 HTMLCollection객체는 추가로 name 속성이 있는 프로퍼티를 가질 수 있고, 숫자뿐만 아니라 문자열로도 접근할 수 있다.
 
-//CSS Class로 요소 선택하기
+4. CSS Class로 요소 선택하기
 동일한 식별자를 class 속성에 포함하고 있는 모든 요소는 하나의 집합으로 취급되는데, 이번 항목에서는 이를 이용해서 관련된 문서 요소 집합을 정의하는 방법이다.
 HTML5에서 정의된 getElementByClassName()은 class 속성의 식별자를 기반으로 문서 요소의 집합을 선택할 수 있다.
 getElementByClassName()의 전달인자는 문자열 하나지만, 이 문자열에 공백으로 구분된 여러 개의 식별자를 쓸 수도 있다. 따라서 getElementByClassName() 메서드를 사용하면, 문서 요소의 class속성에 메서드 인자로 지정한 식별자들 전부가 있는 요소를 찾는다. (class속성과 getElementByClassName() 메서드에서는 class 식별자의 구분자를 쉼표가아닌 공백을 이용해 구분한다)
@@ -1476,7 +1489,7 @@ var fatal = log.getElementByClassName("fatal error");
 현재의 웹브라우저는 문서 시작 부분의 <!DOCTYPE> 선언 방법에 따라서 쿼크모드 나 표준모드 로 HTML문서를 출력한다.
 쿼크모드는 하위 호환성을 위해 존재하며, class속성과 CSS스타일시트의 class식별자에서 대소문자를 구분하지 않는 약간 특이한 특징이 있다. 그래서 getElementByClassName()은 스타일시트에 사용된 매칭 알고리즘을 따르는데, 문서가 쿼크모드로 렌더링 되면 이 메서드는 대소문자 구분없이 class식별자로 문자열 비교를 수행한다. 쿼크모드가 아니면 대소문자를 구분하여 비교한다.
 
-//CSS선택자로 요소 선택하기
+5. CSS선택자로 요소 선택하기
 문서의 요소는 다음처럼 ID와 HTML 태그명, class 속성명으로 선택할 수 있다.
 ```
 #nav                                                  -> id 속성이 nav인 요소
@@ -1495,3 +1508,8 @@ body>h1:first-child                                   -> body 한 레벨 아래�
 
 div, #log                                             -> id가 log 인 요소와 모든 div요소
 ```
+
+Document 객체의 querySelectorAll() 메서드는 Selectors API의 핵심이다. 이 메서드는 CSS 선택자 문자열을 인자로 받아서, 이 선택자와 일치하는 문서 내 모든 요소를 NodeList 객체로 반환한다. 이 전의 요소 선택 메서드와 달리, querySelectorAll() 메서드가 반환하는 NodeList는 메서드를 호출하는 순간 선택자와 일치하는 요소를 그대로 가져오기는 하지만, 그 후에 일어나는 문서 내 변화를 반영하지는 않는다.
+
+6. Document.all[]
+현제는 document.all이 표준 메서드인 getElementById()와 getElementsByTagName() 같은 메서드로 대체되었고, 오래된 방식이라 사용하지 않는다.
