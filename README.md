@@ -52,6 +52,16 @@ function merge(o, p) {
   }
   return o;
 }
+
+-> for ( ... of ...) 이 좋지 못한 형식이라고 해서 for (... in ...)도 나쁜 습관인가? 궁금..
+_merge = (o, p) => {
+  p.forEach((prop) => 
+    if(this.o.hasOwnProperty[prop]) 
+      continue;
+    this.o[prop] = this.p[prop];
+  )
+  return o;
+}
 ```
 
 ```
@@ -61,10 +71,30 @@ function restrict(o, p) {
   }
   return o;
 }
+
+->
+_restrict = (o, p) => {
+  p.forEach((prop) =>
+    if(!(prop in p)) 
+      delete o[prop];
+  )
+  return o;
+}
 ```
 
 ```
 function key(o) {
+  if (typeof o !== 'object') throw TypeError();
+  var result = [];
+  for (var prop in p) {
+    if(o.hasOwnPrototype[prop])
+      result.push(prop);
+  }
+  return result;
+}
+
+-> ES6에서 typeof에 preferenceError가 발생하는 일이 발생한다고 함. 좀 더 자세히 알아보고 정리하자. 우선 간단 정리.
+_key = (o) => {
   if (typeof o !== 'object') throw TypeError();
   var result = [];
   for (var prop in p) {
